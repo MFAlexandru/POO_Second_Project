@@ -15,6 +15,7 @@ import org.json.simple.parser.JSONParser;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Map;
 
 /**
@@ -76,8 +77,8 @@ public final class Main {
                         (int) customer.getPayment(),
                         customer.getContractLength()));
             }
-            consumerData.sort(((o1, o2) -> o1.getRemainedContractMonths()
-                    - o2.getRemainedContractMonths()));
+            consumerData.sort((Comparator.comparingInt(
+                    OutputCustomerToDistribuitor::getRemainedContractMonths)));
             distributorsOut.add(new OutputDistributors(distributor.getId(),
                     distributor.isFaliment(),
                     (int) distributor.getBudget(),
@@ -113,7 +114,7 @@ public final class Main {
                          final ArrayList<Producer> producers,
                          final JSONArray monthlyUpdates,
                          final int rounds) {
-        boolean mark = false;
+        boolean mark;
 
         for (int i = 1; i <= rounds + 1; i++) {
             mark = false;
@@ -151,6 +152,7 @@ public final class Main {
             for (Distributor distributor : distributors) {
                 if (!distributor.isFaliment()) {
                     mark = true;
+                    break;
                 }
             }
             if (!mark) {

@@ -2,7 +2,7 @@ package entities;
 
 public class ProducerObserver {
     private Boolean log;
-    private Integer id;
+    private final Integer id;
     /**
      * get the id
      */

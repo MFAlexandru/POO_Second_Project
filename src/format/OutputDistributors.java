@@ -3,13 +3,13 @@ package format;
 import java.util.ArrayList;
 
 public class OutputDistributors {
-    private int id;
-    private int energyNeededKW;
-    private int contractCost;
-    private int budget;
-    private String producerStrategy;
-    private boolean isBankrupt;
-    private ArrayList<OutputCustomerToDistribuitor> contracts;
+    private final int id;
+    private final int energyNeededKW;
+    private final int contractCost;
+    private final int budget;
+    private final String producerStrategy;
+    private final boolean isBankrupt;
+    private final ArrayList<OutputCustomerToDistribuitor> contracts;
     /**
      * returns the id
      */

@@ -4,7 +4,7 @@ import entities.Producer;
 
 import java.util.ArrayList;
 
-public class QuantityStrategy implements EnergyStrategy {
+public class QuantityStrategy extends EnergyStrategy {
     /**
      * method tho chose a producer
      */
@@ -15,14 +15,10 @@ public class QuantityStrategy implements EnergyStrategy {
             for (int j = i + 1; j < producers.size(); j++) {
                 if (producers.get(i).getEnergy() == producers.get(j).getEnergy()) {
                     if (producers.get(i).getId() > producers.get(j).getId()) {
-                        Producer aux = producers.get(i);
-                        producers.set(i, producers.get(j));
-                        producers.set(j, aux);
+                        swap(producers, i, j);
                     }
                 } else if (producers.get(i).getEnergy() < producers.get(j).getEnergy()) {
-                    Producer aux = producers.get(i);
-                    producers.set(i, producers.get(j));
-                    producers.set(j, aux);
+                    swap(producers, i, j);
                 }
             }
         }

@@ -22,13 +22,13 @@ public class Distributor {
     private float productionCost;
     private float currentPrice = 0;
     private boolean faliment = false;
-    private int energyNeeded;
+    private final int energyNeeded;
     private final HashMap<Integer, Customer> customers;
-    private String strategyName;
+    private final String strategyName;
 
-    private ProducerObserver observer;
+    private final ProducerObserver observer;
     private EnergyStrategy currentStrategy;
-    private ArrayList<Producer> myProducers;
+    private final ArrayList<Producer> myProducers;
 
     public Distributor(final int id,
                        final int contractLength,
@@ -151,7 +151,7 @@ public class Distributor {
                 myProducers.add(p);
                 productionCost += p.getEnergy() * p.getPrice();
             }
-            productionCost = Math.round(Math.floor(productionCost / (float) MAMBO_NUMBA_5));
+            productionCost = Math.round(Math.floor(productionCost / MAMBO_NUMBA_5));
             observer.setLog(false);
         }
     }
@@ -283,12 +283,7 @@ public class Distributor {
     public int getEnergyNeeded() {
         return energyNeeded;
     }
-    /**
-     * returns the actual strategy
-     */
-    public EnergyStrategy getCurrentStrategy() {
-        return currentStrategy;
-    }
+
     /**
      * returns the strat name
      */

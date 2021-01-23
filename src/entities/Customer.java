@@ -147,7 +147,6 @@ public class Customer {
                     if (payment + debt > budget) {
                         faliment = true;
                         bkrTime++;
-                        return;
                     } else {
                         distributors.get(distributorId).gainConsumer(id, this);
                         distributors.get(distributorId).colect(payment);
@@ -159,13 +158,11 @@ public class Customer {
                             debt = 0;
                             debtId = -1;
                         }
-                        return;
                     }
                 } else {
                     if (debt > budget) {
                         faliment = true;
                         bkrTime++;
-                        return;
                     } else {
                         distributors.get(distributorId).gainConsumer(id, this);
                         distributors.get(distributorId).colect(payment);
@@ -182,15 +179,14 @@ public class Customer {
                             budget -= payment;
                         }
                         contractLength--;
-                        return;
                     }
                 }
+                return;
             } else {
                 if (payment + debt > budget) {
                     faliment = true;
                     bkrTime++;
                     contractLength--;
-                    return;
                 } else {
                     distributors.get(distributorId).colect(payment);
                     budget -= payment;
@@ -201,8 +197,8 @@ public class Customer {
                         debt = 0;
                         debtId = -1;
                     }
-                    return;
                 }
+                return;
             }
 
         }

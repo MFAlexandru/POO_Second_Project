@@ -4,7 +4,7 @@ import entities.Producer;
 
 import java.util.ArrayList;
 
-public class GreenStrategy implements EnergyStrategy {
+public class GreenStrategy extends EnergyStrategy {
     /**
      * method tho chose a producer
      */
@@ -24,24 +24,16 @@ public class GreenStrategy implements EnergyStrategy {
                     if (producers.get(i).getPrice() ==  producers.get(j).getPrice()) {
                         if (producers.get(i).getEnergy() == producers.get(j).getEnergy()) {
                             if (producers.get(i).getId() > producers.get(j).getId()) {
-                                Producer aux = producers.get(i);
-                                producers.set(i, producers.get(j));
-                                producers.set(j, aux);
+                                swap(producers, i, j);
                             }
                         } else if (producers.get(i).getEnergy() < producers.get(j).getEnergy()) {
-                            Producer aux = producers.get(i);
-                            producers.set(i, producers.get(j));
-                            producers.set(j, aux);
+                            swap(producers, i, j);
                         }
                     } else if (producers.get(i).getPrice() >  producers.get(j).getPrice()) {
-                        Producer aux = producers.get(i);
-                        producers.set(i, producers.get(j));
-                        producers.set(j, aux);
+                        swap(producers, i, j);
                     }
                 } else if (!producers.get(i).getType().isRenewable()) {
-                    Producer aux = producers.get(i);
-                    producers.set(i, producers.get(j));
-                    producers.set(j, aux);
+                    swap(producers, i, j);
                 }
             }
         }

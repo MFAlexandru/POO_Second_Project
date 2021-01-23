@@ -5,6 +5,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Producer {
     private int id;
@@ -12,8 +13,8 @@ public class Producer {
     private int maxDistributors;
     private double price;
     private int energy;
-    private ArrayList<Stat> stats;
-    private ArrayList<ProducerObserver> observers;
+    private final ArrayList<Stat> stats;
+    private final ArrayList<ProducerObserver> observers;
 
     public Producer(int id, EnergyType type, int maxDistributors, double price, int energy) {
         this.id = id;
@@ -113,7 +114,7 @@ public class Producer {
         for (ProducerObserver p : observers) {
             distr.add(p.getId());
         }
-        distr.sort((a, b) -> a - b);
+        distr.sort(Comparator.comparingInt(a -> a));
         stats.add(new Stat(stats.size() + 1, distr));
     }
     /**
