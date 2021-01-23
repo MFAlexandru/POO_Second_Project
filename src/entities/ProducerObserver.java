@@ -1,25 +1,36 @@
 package entities;
 
-import java.util.Observable;
-import java.util.Observer;
-
-public class ProducerObserver implements Observer {
+public class ProducerObserver {
     private Boolean log;
-
-    public ProducerObserver(Boolean log) {
-        this.log = log;
+    private Integer id;
+    /**
+     * get the id
+     */
+    public Integer getId() {
+        return id;
     }
 
+    public ProducerObserver(Boolean log, int id) {
+
+        this.log = log;
+        this.id = id;
+    }
+    /**
+     * get the log
+     */
     public Boolean getLog() {
         return log;
     }
-
+    /**
+     * set the log
+     */
     public void setLog(Boolean log) {
         this.log = log;
     }
-
-    @Override
-    public void update(Observable o, Object arg) {
+    /**
+     * update
+     */
+    public void update() {
             log = true;
     }
 }

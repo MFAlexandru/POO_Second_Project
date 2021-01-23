@@ -2,7 +2,11 @@ package entities;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import strategies.*;
+import strategies.EnergyChoiceStrategyType;
+import strategies.EnergyStrategy;
+import strategies.PriceStrategy;
+import strategies.QuantityStrategy;
+import strategies.GreenStrategy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,6 +14,7 @@ import java.util.Map;
 
 public class Distributor {
     private static final float RATIO = 0.2f;
+    private static final float MAMBO_NUMBA_5 = 10;
     private int id;
     private int contractLength;
     private float budget;
@@ -19,8 +24,9 @@ public class Distributor {
     private boolean faliment = false;
     private int energyNeeded;
     private final HashMap<Integer, Customer> customers;
+    private String strategyName;
 
-    private ProducerObserver observer = new ProducerObserver(true);
+    private ProducerObserver observer;
     private EnergyStrategy currentStrategy;
     private ArrayList<Producer> myProducers;
 
@@ -36,7 +42,7 @@ public class Distributor {
         this.infrastructureCost = initialInfrastructureCost;
         this.productionCost = 0;
         this.energyNeeded = energyNeeded;
-
+        strategyName = strat.getLabel();
         switch (strat) {
             case GREEN:
                 currentStrategy = new GreenStrategy();
@@ -53,6 +59,7 @@ public class Distributor {
         }
         customers = new HashMap<>();
         myProducers = new ArrayList<>();
+        observer = new ProducerObserver(true, id);
     }
 
     /**
@@ -127,7 +134,9 @@ public class Distributor {
     public void colect(final float pay) {
         this.budget += pay;
     }
-
+    /**
+     * checks for new producers
+     */
     public void checkSuply(ArrayList<Producer> producers) {
         if (!faliment && observer.getLog()) {
             for (Producer p : myProducers) {
@@ -136,13 +145,13 @@ public class Distributor {
             myProducers.clear();
             productionCost = 0;
             ArrayList<Producer> newBoyz;
-            newBoyz = currentStrategy.Chose(producers, energyNeeded);
+            newBoyz = currentStrategy.chose(producers, energyNeeded);
             for (Producer p : newBoyz) {
                 p.addObserver(observer);
                 myProducers.add(p);
                 productionCost += p.getEnergy() * p.getPrice();
             }
-            productionCost = Math.round(Math.floor(productionCost / 10));
+            productionCost = Math.round(Math.floor(productionCost / (float) MAMBO_NUMBA_5));
             observer.setLog(false);
         }
     }
@@ -179,7 +188,8 @@ public class Distributor {
                     (int) (long) distributor.get("initialBudget"),
                     (int) (long) distributor.get("initialInfrastructureCost"),
                     (int) (long) distributor.get("energyNeededKW"),
-                    EnergyChoiceStrategyType.valueOf( (String) distributor.get("producerStrategy"))));
+                    EnergyChoiceStrategyType.valueOf((String)
+                            distributor.get("producerStrategy"))));
         }
     }
     /**
@@ -266,5 +276,23 @@ public class Distributor {
         for (int i : toRm) {
             customers.remove(i);
         }
+    }
+    /**
+     * returns the energy needed
+     */
+    public int getEnergyNeeded() {
+        return energyNeeded;
+    }
+    /**
+     * returns the actual strategy
+     */
+    public EnergyStrategy getCurrentStrategy() {
+        return currentStrategy;
+    }
+    /**
+     * returns the strat name
+     */
+    public String getStrategyName() {
+        return strategyName;
     }
 }

@@ -5,8 +5,11 @@ import entities.Producer;
 import java.util.ArrayList;
 
 public class PriceStrategy implements EnergyStrategy {
+    /**
+     * method tho chose a producer
+     */
     @Override
-    public ArrayList<Producer> Chose(final ArrayList<Producer> producersIn, int quantity) {
+    public ArrayList<Producer> chose(final ArrayList<Producer> producersIn, int quantity) {
         ArrayList<Producer> producers = new ArrayList<>(producersIn);
         for (int i = 0; i < producers.size(); i++) {
             for (int j = i + 1; j < producers.size(); j++) {
@@ -17,7 +20,7 @@ public class PriceStrategy implements EnergyStrategy {
                             producers.set(i, producers.get(j));
                             producers.set(j, aux);
                         }
-                    } else if(producers.get(i).getEnergy() < producers.get(j).getEnergy()) {
+                    } else if (producers.get(i).getEnergy() < producers.get(j).getEnergy()) {
                         Producer aux = producers.get(i);
                         producers.set(i, producers.get(j));
                         producers.set(j, aux);
@@ -35,7 +38,6 @@ public class PriceStrategy implements EnergyStrategy {
             if (producers.get(i).countObservers() != producers.get(i).getMaxDistributors()) {
                 output.add(producers.get(i));
                 sum += producers.get(i).getEnergy();
-                System.out.print(producers.get(i).getEnergy() + " ");
             }
         }
         return output;

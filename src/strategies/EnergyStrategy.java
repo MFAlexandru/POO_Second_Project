@@ -5,5 +5,8 @@ import entities.Producer;
 import java.util.ArrayList;
 
 public interface EnergyStrategy {
-    public ArrayList<Producer> Chose(final ArrayList<Producer> producers , int quantity);
+    /**
+     * method tho chose a producer
+     */
+    ArrayList<Producer> chose(ArrayList<Producer> producers, int quantity);
 }
