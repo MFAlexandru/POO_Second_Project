@@ -7,7 +7,7 @@ Proiectare Orientata pe Obiecte, Seriile CA, CD
 
 <https://ocw.cs.pub.ro/courses/poo-ca-cd/teme/proiect/etapa2>
 
-Student: todo nume, grupa
+Student: Margarit Alexandru, 322CA
 
 ## Rulare teste
 
@@ -22,33 +22,44 @@ Biblioteci necesare pentru implementare:
 * Jackson Databind 
 * Jackson Annotations
 
-Tutorial Jackson JSON: 
-<https://ocw.cs.pub.ro/courses/poo-ca-cd/laboratoare/tutorial-json-jackson>
-
-[Puteti sa folositi si alte biblioteci si sa editati aceasta sectiune]
-
 ## Implementare
 
 ### Entitati
 
-Clasele folosite, nu este nevoie sa enumerati proprietati si metode, 
-doar sa ziceti rolul lor si de ce le folositi]
+Customer - reprezinta consumatorul si are datle sale.
+
+Distributor - are datele distribuitorului.
+
+Producer - tine datele producatorului.
+
+ProducerObserver - desi Producer nu extinde Observable el este un observable
+		iar aceasta clasa are riolul de a observa producatorii.
+
+Fiecare din cele de mai sus au si Factory-uri care sunt self-explanatory.
+
+Avem si mai multe clase in directorul format ce ajuta la afisarea datelor
+
+Pe langa acestea avem si EnergyStrategy care este o interfata pentru stategiile
+de alegere a energiei.(PriceStrategy, QuantityStrategy, GreenStrategy)
 
 ### Flow
 
-Ce se intampla in fiecare runda (luna), cum comunica entitatile intre ele, ce clasa controleaza flowul etc
+Intr-o runda normala:
+	1. Se citeste update-ul pentru Distributors si Consumers folosind JSONObjects si 
+		Arrays.
+	2. Aplicam Schimbarile tuturor membrilor care sunt retinuti in Array-uri
+	3. Se inregistreaza Monthly updates
+	4. Consumatorii cauta distribuitori si platesc taxe
+	5. Distribuitorii platesc taxe dupa care citesc schimbarile si folosesc 
+		observerii pentru a determina care din ei au nevoie de un nou producer.
 
-### Elemente de design OOP
+### Diff fata de runda 1
 
-e.g Am folosit incapsulare pentru ... Am folosit abstractizare pentru ...
+Avem cele doua noi patternuri de Obsever si Strategy care au fost folosite la entitati.
+Am folosit Observerul pentru a identifica cand are un Distribuitor nevoie de update
+si Strategy pentru dioferitele strategi de a alege Producatori.
 
-### Design patterns
-
-Ce design patterns ati folosit, cum le-ati adaptat problemei date
-
-### Dificultati intalnite, limitari, probleme
-
-e.g. pentru a rezolva problema X de checkstyle am facut ...
-
-[optional ## Feedback, comments
-
+### Git
+	MFAlexandru
+	Repoul este Tema_POO_2
+	link : https://github.com/MFAlexandru/Tema_POO_2#rulare-teste
