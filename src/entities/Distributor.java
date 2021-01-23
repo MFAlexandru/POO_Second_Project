@@ -2,6 +2,7 @@ package entities;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import strategies.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,20 +17,44 @@ public class Distributor {
     private float productionCost;
     private float currentPrice = 0;
     private boolean faliment = false;
+    private int energyNeeded;
     private final HashMap<Integer, Customer> customers;
+
+    private ProducerObserver observer = new ProducerObserver(true);
+    private EnergyStrategy currentStrategy;
+    private ArrayList<Producer> myProducers;
 
     public Distributor(final int id,
                        final int contractLength,
                        final int initialBudget,
                        final int initialInfrastructureCost,
-                       final int initialProductionCost) {
+                       final int energyNeeded,
+                       final EnergyChoiceStrategyType strat) {
         this.id = id;
         this.contractLength = contractLength;
         this.budget = initialBudget;
         this.infrastructureCost = initialInfrastructureCost;
-        this.productionCost = initialProductionCost;
+        this.productionCost = 0;
+        this.energyNeeded = energyNeeded;
+
+        switch (strat) {
+            case GREEN:
+                currentStrategy = new GreenStrategy();
+                break;
+            case PRICE:
+                currentStrategy = new PriceStrategy();
+                break;
+            case QUANTITY:
+
+                currentStrategy = new QuantityStrategy();
+                break;
+            default:
+                break;
+        }
         customers = new HashMap<>();
+        myProducers = new ArrayList<>();
     }
+
     /**
      * returns the id
      */
@@ -53,12 +78,6 @@ public class Distributor {
      */
     public void setInfrastructureCost(final float infrastructureCost) {
         this.infrastructureCost = infrastructureCost;
-    }
-    /**
-     * sets the production cost
-     */
-    public void setProductionCost(final float productionCost) {
-        this.productionCost = productionCost;
     }
     /**
      * returns the list of customers
@@ -91,18 +110,6 @@ public class Distributor {
         return budget;
     }
     /**
-     * return the infrastructure cost
-     */
-    public float getInfrastructureCost() {
-        return infrastructureCost;
-    }
-    /**
-     * returns the production cost
-     */
-    public float getProductionCost() {
-        return productionCost;
-    }
-    /**
      * returns the current price
      */
     public float getCurrentPrice() {
@@ -120,6 +127,26 @@ public class Distributor {
     public void colect(final float pay) {
         this.budget += pay;
     }
+
+    public void checkSuply(ArrayList<Producer> producers) {
+        if (!faliment && observer.getLog()) {
+            for (Producer p : myProducers) {
+                p.deleteObserver(observer);
+            }
+            myProducers.clear();
+            productionCost = 0;
+            ArrayList<Producer> newBoyz;
+            newBoyz = currentStrategy.Chose(producers, energyNeeded);
+            for (Producer p : newBoyz) {
+                p.addObserver(observer);
+                myProducers.add(p);
+                productionCost += p.getEnergy() * p.getPrice();
+            }
+            productionCost = Math.round(Math.floor(productionCost / 10));
+            observer.setLog(false);
+        }
+    }
+
     /**
      * calculates the current price based on the number of
      * customers
@@ -151,7 +178,8 @@ public class Distributor {
                     (int) (long) distributor.get("contractLength"),
                     (int) (long) distributor.get("initialBudget"),
                     (int) (long) distributor.get("initialInfrastructureCost"),
-                    (int) (long) distributor.get("initialProductionCost")));
+                    (int) (long) distributor.get("energyNeededKW"),
+                    EnergyChoiceStrategyType.valueOf( (String) distributor.get("producerStrategy"))));
         }
     }
     /**
@@ -163,8 +191,6 @@ public class Distributor {
             JSONObject distributorInfo = (JSONObject) i;
             distributors.get((int) (long) distributorInfo.get("id"))
                     .setInfrastructureCost((int) (long) distributorInfo.get("infrastructureCost"));
-            distributors.get((int) (long) distributorInfo.get("id"))
-                    .setProductionCost((int) (long) distributorInfo.get("productionCost"));
         }
     }
     /**

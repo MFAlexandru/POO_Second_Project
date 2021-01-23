@@ -142,22 +142,48 @@ public class Customer {
                     contractLength = 0;
                     return;
                 }
-                if (payment + debt > budget) {
-                    faliment = true;
-                    bkrTime++;
-                    return;
-                } else {
-                    distributors.get(distributorId).gainConsumer(id, this);
-                    distributors.get(distributorId).colect(payment);
-                    budget -= payment;
-                    contractLength--;
-                    if (debtId != -1) {
-                        distributors.get(debtId).colect(debt);
-                        budget -= debt;
-                        debt = 0;
-                        debtId = -1;
+
+                if (debtId == distributorId) {
+                    if (payment + debt > budget) {
+                        faliment = true;
+                        bkrTime++;
+                        return;
+                    } else {
+                        distributors.get(distributorId).gainConsumer(id, this);
+                        distributors.get(distributorId).colect(payment);
+                        budget -= payment;
+                        contractLength--;
+                        if (debtId != -1) {
+                            distributors.get(debtId).colect(debt);
+                            budget -= debt;
+                            debt = 0;
+                            debtId = -1;
+                        }
+                        return;
                     }
-                    return;
+                } else {
+                    if (debt > budget) {
+                        faliment = true;
+                        bkrTime++;
+                        return;
+                    } else {
+                        distributors.get(distributorId).gainConsumer(id, this);
+                        distributors.get(distributorId).colect(payment);
+                        if (debtId != -1) {
+                            distributors.get(debtId).colect(debt);
+                            budget -= debt;
+                            debt = 0;
+                            debtId = -1;
+                        }
+                        if (budget < payment) {
+                            debtId = distributorId;
+                            debt += Math.round(Math.floor(payment * RATIO));
+                        } else {
+                            budget -= payment;
+                        }
+                        contractLength--;
+                        return;
+                    }
                 }
             } else {
                 if (payment + debt > budget) {

@@ -22,33 +22,25 @@ public final class Game {
      */
     public void gameLoop(final ArrayList<Distributor> distributors,
                                 final ArrayList<Customer> customers,
+                                final ArrayList<Producer> producers,
                                 final JSONArray monthlyUpdates,
                                 final int rounds) {
         boolean mark = false;
 
-        for (Distributor distributor : distributors) {
-            distributor.calculateCurrentPrice();
-        }
-
-        for (Customer customer: customers) {
-            customer.colect();
-            customer.pay(distributors);
-        }
-
-        for (Distributor distributor : distributors) {
-            distributor.pay();
-        }
-
-
-        for (int i = 0; i < rounds; i++) {
+        for (int i = 1; i <= rounds + 1; i++) {
             mark = false;
-            JSONObject update = (JSONObject) monthlyUpdates.get(i);
-            JSONArray updCustomers = (JSONArray) update.get("newConsumers");
-            JSONArray updDistributors = (JSONArray) update.get("costsChanges");
-            Customer.addSet(customers, updCustomers);
-            Distributor.updateCost(distributors, updDistributors);
+            System.out.print(i + "\n");
+
+            if (i != 1) {
+                JSONObject update = (JSONObject) monthlyUpdates.get(i - 2);
+                JSONArray updCustomers = (JSONArray) update.get("newConsumers");
+                JSONArray updDistributors = (JSONArray) update.get("distributorChanges");
+                Customer.addSet(customers, updCustomers);
+                Distributor.updateCost(distributors, updDistributors);
+            }
 
             for (Distributor distributor : distributors) {
+                distributor.checkSuply(producers);
                 distributor.calculateCurrentPrice();
             }
 
@@ -58,6 +50,7 @@ public final class Game {
             }
 
             for (Distributor distributor : distributors) {
+                distributor.checkSuply(producers);
                 distributor.pay();
             }
 
@@ -68,6 +61,12 @@ public final class Game {
             }
             if (!mark) {
                 break;
+            }
+
+            if (i != 1) {
+                JSONObject update = (JSONObject) monthlyUpdates.get(i - 2);
+                JSONArray updProducers = (JSONArray) update.get("producerChanges");
+                Producer.update(producers, updProducers);
             }
         }
 

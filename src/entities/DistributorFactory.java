@@ -1,5 +1,7 @@
 package entities;
 
+import strategies.EnergyChoiceStrategyType;
+
 public final class DistributorFactory {
     public enum TypesOfDistributors {
         SIMPLE_DISTRIBUTOR
@@ -14,13 +16,15 @@ public final class DistributorFactory {
                                                 final int contractLength,
                                                 final int initialBudget,
                                                 final int initialInfrastructureCost,
-                                                final int initialProductionCost) {
+                                                final int energyNeeded,
+                                                final EnergyChoiceStrategyType strat) {
         switch (type) {
             case SIMPLE_DISTRIBUTOR: return new Distributor(id,
                     contractLength,
                     initialBudget,
                     initialInfrastructureCost,
-                    initialProductionCost);
+                    energyNeeded,
+                    strat);
             default: return null;
         }
     }
