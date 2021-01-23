@@ -45,11 +45,16 @@ de alegere a energiei.(PriceStrategy, QuantityStrategy, GreenStrategy)
 ### Flow
 
 Intr-o runda normala:
+
 	1. Se citeste update-ul pentru Distributors si Consumers folosind JSONObjects si 
 		Arrays.
+
 	2. Aplicam Schimbarile tuturor membrilor care sunt retinuti in Array-uri
+
 	3. Se inregistreaza Monthly updates
+
 	4. Consumatorii cauta distribuitori si platesc taxe
+
 	5. Distribuitorii platesc taxe dupa care citesc schimbarile si folosesc 
 		observerii pentru a determina care din ei au nevoie de un nou producer.
 
